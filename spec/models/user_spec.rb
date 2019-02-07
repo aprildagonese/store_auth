@@ -2,15 +2,20 @@ require 'rails_helper'
 
 describe User, type: :model do
   describe "class methods" do
-    context "when a user gives an email address" do
-      it "recognizes a valid email" do
+    context "when a user gives an email address and password" do
+      it "recognizes a valid email and password" do
         april = User.create!(name: "April", email: "april@email.com", password: "123456")
-        expect(User.validate_email("april@email.com")).to eq(april)
+        expect(User.authenticate("april@email.com", "123456")).to eq(april)
       end
 
       it "recognizes an invalid email" do
         april = User.create!(name: "April", email: "april@email.com", password: "123456")
-        expect(User.validate_email("dagonese@email.com")).to eq(nil)
+        expect(User.authenticate("dagonese@email.com", "123456")).to eq(nil)
+      end
+
+      it "recognizes an invalid password" do
+        april = User.create!(name: "April", email: "april@email.com", password: "123456")
+        expect(User.authenticate("april@email.com", "654321")).to eq(nil)
       end
     end
   end
